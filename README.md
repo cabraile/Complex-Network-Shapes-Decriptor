@@ -18,7 +18,7 @@ complex networks for 3D objects recognition, but the graphs were extracted from
 for 3D shapes description, achieving promising results.
 
 This repository project was implemented by Carlos André Braile Przewodowski
-Filho to make easier the use of the Complex Networks shape descriptor using C++.
+Filho ([see more at](https://sites.google.com/site/brailepage/)) to make easier the use of the Complex Networks shape descriptor using C++.
 
 * __[1] A. R. Backes, D. Casanova, and O. M. Bruno__,_“A complex network based
 approach for boundary shape analysis”_, Pattern Recognition, pp.54–67, 2009._
