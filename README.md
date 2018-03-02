@@ -35,8 +35,7 @@ Systems with Applications, pp. 4283–4300, 2013.
 connectivity index for texture recognition”_, Pattern Recognition Letters,
 pp. 239–244, 2016._
 * __[6] J. Tang, B. Jiang, C.-C. Chang, and B. Luo__, _“Graph structure analysis
-based on complex network”_, Digital Signal Processing, pp. 713–725,
-2012.
+based on complex network”_, Digital Signal Processing, pp. 713–725, 2012.
 * __[7] C. A. B. Przewodowski Filho and F. S. Osório__, _"Complex Network Shape
 Descriptor For 3D Objects Classification"_. In: 2017 Latin American Robotics
 Symposium (LARS) and 2017 Brazilian Symposium on Robotics (SBR). [S.l.]:
