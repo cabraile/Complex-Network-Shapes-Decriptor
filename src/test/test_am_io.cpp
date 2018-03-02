@@ -17,6 +17,8 @@ int main(int argc, char * argv[])
   cnsd::AdjacencyMatrix<double> thresh_u_am;
   cnsd::AdjacencyMatrix<int> thresh_d_am;
 
+  cnsd::debug::enable_log(true);
+
   println("=> Empty Undirected Matrix");
   u_am.print();
 
@@ -35,13 +37,13 @@ int main(int argc, char * argv[])
   d_am.print();
 
   println("=> Output to files");
-  u_am.toFile("u_am.txt");
-  d_am.toFile("d_am.txt");
+  u_am.toFile("files/u_am.txt");
+  d_am.toFile("files/d_am.txt");
 
 
   println("=> Input from files");
-  input_u_am.fromFile("u_am.txt");
-  input_d_am.fromFile("d_am.txt");
+  input_u_am.fromFile("files/u_am.txt");
+  input_d_am.fromFile("files/d_am.txt");
 
   println("=> Undirected");
   input_u_am.print();

@@ -11,6 +11,8 @@ int main(int argc, char * argv[])
   cnsd::AdjacencyMatrix<double> original_mat(4, cnsd::CON_UNDIRECTED);
   cnsd::AdjacencyMatrix<bool> bin_mat;
   std::vector<std::size_t> degrees_list;
+  
+  cnsd::debug::enable_log(true);
 
   println("=> Edges Connected");
   original_mat.setWeight(0, 1, 0.6);
