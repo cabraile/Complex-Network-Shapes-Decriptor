@@ -97,3 +97,6 @@ over an adjacency matrix.
 
 Finally, the `src/test/test_sd.cpp` is an example of how to compute the shape
 descriptor from a handcrafted adjacency matrix.
+
+To run the tests, run `bash run.sh` inside the `src` dir. Edit the `run.sh`
+to change the selected test.
