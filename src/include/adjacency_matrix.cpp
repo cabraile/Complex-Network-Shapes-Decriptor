@@ -7,6 +7,9 @@
 #include <cstdio>
 #include <exception>
 #include <string>
+#include <limits>
+
+#include "io.cpp"
 
 namespace cnsd
 {
@@ -48,7 +51,7 @@ namespace cnsd
     std::vector<T> weights;
     std::size_t nb_nodes;
     ConnectionType connection_type;
-
+    T max_weight, min_weight;
   public:
 
     AdjacencyMatrix(
@@ -58,6 +61,9 @@ namespace cnsd
     {
       this->resize(nb_nodes);
       this->setConnectionType(connection_type);
+
+      this->max_weight = std::numeric_limits<T>::min();
+      this->min_weight = std::numeric_limits<T>::max();
       return ;
     }
 
@@ -73,7 +79,7 @@ namespace cnsd
       double total_size = (nb_nodes * nb_nodes * sizeof(T)) /
           (1024 * 1024 * 1024);
       if(total_size >= 2)
-        std::cout << "(Warning) Memory usage over 2GB" << std::endl;
+        debug::log("(Warning) Memory usage over 2GB");
 
       this->nb_nodes = nb_nodes;
       this->weights = std::vector<T>(nb_nodes * nb_nodes, init_val);
@@ -98,6 +104,13 @@ namespace cnsd
       this->weights[(i * nb_nodes) + j] = weight;
       if(this->getConnectionType() == CON_UNDIRECTED)
         this->weights[(j * nb_nodes) + i] = weight;
+
+      if(this->max_weight < weight)
+        this->max_weight = weight;
+
+      if(this->min_weight > weight)
+        this->min_weight = weight;
+
       return ;
     }
 
@@ -112,15 +125,15 @@ namespace cnsd
     // # GETTERS
     // ##########################
 
-    T get(std::size_t index) const
+    T get(const std::size_t & index)  const
     {
       return this->weights[index];
     }
 
-    T get(std::size_t node_from, std::size_t node_to) const
+    T get(const std::size_t & node_from, const std::size_t & node_to) const
     {
       std::size_t index;
-      nodesToIndex(node_from, node_to, index);
+      this->nodesToIndex(index, node_from, node_to);
       return this->weights[index];
     }
 
@@ -129,7 +142,7 @@ namespace cnsd
       return this->nb_nodes;
     }
 
-    std::vector<T> getWeightsVector()
+    std::vector<T> getWeightsVector() const
     {
       return weights;
     }
@@ -157,6 +170,10 @@ namespace cnsd
       return ;
     }
 
+    T getMax() const { return max_weight; }
+
+    T getMin() const { return min_weight; }
+
     ConnectionType getConnectionType() const
     {
       return this->connection_type;
@@ -171,7 +188,7 @@ namespace cnsd
       AdjacencyMatrix<T> & in_AM,
       const T & lower_T,
       const T & higher_T,
-      T cut_value = 0
+      const T & cut_value = 0
     ) const
     {
       std::size_t nb_nodes = this->getNodesNumber();
@@ -190,8 +207,38 @@ namespace cnsd
           std::size_t index;
           nodesToIndex(index, node_from, node_to);
           T weight = this->get(index);
+
           if( weight >= lower_T && weight <= higher_T  )
               in_AM.setWeight(index, weight);
+        }
+      }
+      return ;
+    }
+
+    void binarize(
+      AdjacencyMatrix<bool> & in_AM,
+      const T & lower_T,
+      const T & higher_T
+    ) const
+    {
+      std::size_t nb_nodes = this->getNodesNumber();
+      ConnectionType conn_type = this->getConnectionType();
+
+      in_AM.resize(nb_nodes, false);
+      in_AM.setConnectionType(conn_type);
+
+      for(std::size_t node_from = 0; node_from < nb_nodes; node_from++)
+      {
+        std::size_t init = 0;
+        if(conn_type == CON_UNDIRECTED)
+          init = node_from;
+        for(std::size_t node_to = init; node_to < nb_nodes; node_to++)
+        {
+          std::size_t index;
+          nodesToIndex(index, node_from, node_to);
+          T weight = this->get(index);
+          if( weight >= lower_T && weight <= higher_T  )
+              in_AM.setWeight(index, true);
         }
       }
       return ;
@@ -289,6 +336,39 @@ namespace cnsd
 
     // ##########################
   };
+
+  std::vector<std::size_t> nodes_degree(const AdjacencyMatrix<bool> & mat)
+  {
+    std::vector<std::size_t> degrees;
+    std::size_t nb_nodes;
+    ConnectionType conn_type;
+
+    conn_type = mat.getConnectionType();
+    nb_nodes = mat.getNodesNumber();
+
+    degrees.resize(nb_nodes, 0);
+
+    for(std::size_t node_from = 0; node_from < nb_nodes; node_from++)
+    {
+      std::size_t init = 0;
+      if(conn_type == CON_UNDIRECTED)
+        init = node_from;
+      for(std::size_t node_to = init; node_to < nb_nodes; node_to++)
+      {
+        bool connected = mat.get(node_from, node_to);
+        if(connected)
+        {
+          degrees[node_from] += 1;
+          if(conn_type == CON_UNDIRECTED && node_from != node_to)
+          {
+            degrees[node_to] += 1;
+          }
+        }
+      }
+    }
+
+    return degrees;
+  }
 };
 
 #endif

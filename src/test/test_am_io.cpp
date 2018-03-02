@@ -48,13 +48,12 @@ int main(int argc, char * argv[])
   println("=> Directed");
   input_d_am.print();
 
-
   println("=> Threshold Graphs - Undirected");
   u_am.cut(thresh_u_am, 2, 10, -1.0);
   thresh_u_am.print();
 
   println("=> Threshold Graphs - Directed");
-  d_am.cut(thresh_d_am, 0, 10, -1.0);
+  d_am.cut(thresh_d_am, 1, 10, -1);
   thresh_d_am.print();
   return 0;
 }
